@@ -190,7 +190,8 @@
                 const data = await response.json();
 
                 if (!response.ok) {
-                    throw new Error(data.error || 'Ocurrió un error al analizar la URL');
+                    const detailedError = data.details ? ` (${data.details})` : '';
+                    throw new Error((data.error || 'Ocurrió un error al analizar la URL') + detailedError);
                 }
 
                 renderResults(data);
