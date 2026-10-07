@@ -1,0 +1,16 @@
+{
+  "name": "auditor-seo-rapido",
+  "version": "1.0.0",
+  "description": "Herramienta SaaS para Auditoría SEO Rápida. Realizado por: ESD Designs (www.esddesigns.es)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.8",
+    "cheerio": "^1.0.0-rc.12",
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  }
+}

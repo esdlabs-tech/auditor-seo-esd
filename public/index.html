@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auditor SEO Rápido | ESD Designs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col font-sans">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm py-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-gray-900"><i class="fas fa-search-chart text-blue-600 mr-2"></i>Auditor SEO Rápido</h1>
+            <a href="https://www.esddesigns.es" target="_blank" class="text-sm text-gray-500 hover:text-blue-600 transition-colors">
+                Realizado por: ESD Designs
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
+        
+        <!-- Search Section -->
+        <div class="bg-white rounded-2xl shadow-xl p-8 mb-12 text-center transform hover:scale-[1.01] transition-transform duration-300">
+            <h2 class="text-3xl font-extrabold text-gray-900 mb-4">Audita cualquier sitio web en segundos</h2>
+            <p class="text-gray-500 mb-8 max-w-2xl mx-auto">Obtén un análisis completo de las métricas SEO más importantes (On-Page) para mejorar tu posicionamiento en Google.</p>
+            
+            <form id="auditForm" class="max-w-3xl mx-auto flex flex-col sm:flex-row gap-4">
+                <input type="url" id="urlInput" placeholder="Ejemplo: https://midominio.com" required
+                    class="flex-grow px-6 py-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg shadow-sm outline-none transition-shadow">
+                <button type="submit" id="submitBtn"
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-lg shadow-md transition-colors flex items-center justify-center min-w-[160px]">
+                    <span id="btnText">Auditar <i class="fas fa-rocket ml-2"></i></span>
+                    <div id="loader" class="loader hidden"></div>
+                </button>
+            </form>
+            <div id="errorMessage" class="text-red-500 mt-4 hidden"></div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="resultsContainer" class="hidden">
+            <div class="mb-8 border-b pb-4">
+                <h3 class="text-2xl font-bold text-gray-800">Resultados para: <a id="resUrl" href="#" target="_blank" class="text-blue-600 hover:underline break-all"></a></h3>
+                <p class="text-gray-500 text-sm mt-1">Velocidad aproximada (TTFB): <span id="resTtfb" class="font-semibold text-gray-700"></span> ms</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <!-- Title Card -->
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4" id="cardTitle">
+                    <div class="flex justify-between items-start mb-4">
+                        <h4 class="text-lg font-semibold text-gray-700"><i class="fas fa-heading mr-2"></i>Etiqueta Title</h4>
+                        <span id="badgeTitle" class="px-2 py-1 rounded text-xs font-bold uppercase"></span>
+                    </div>
+                    <p id="resTitle" class="text-gray-600 text-sm mb-2 break-words"></p>
+                    <p class="text-xs text-gray-400">Longitud: <span id="resTitleLength" class="font-semibold text-gray-700"></span> caracteres (Ideal: 50-60)</p>
+                </div>
+
+                <!-- Meta Description Card -->
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4" id="cardDesc">
+                    <div class="flex justify-between items-start mb-4">
+                        <h4 class="text-lg font-semibold text-gray-700"><i class="fas fa-align-left mr-2"></i>Meta Description</h4>
+                        <span id="badgeDesc" class="px-2 py-1 rounded text-xs font-bold uppercase"></span>
+                    </div>
+                    <p id="resDesc" class="text-gray-600 text-sm mb-2 break-words"></p>
+                    <p class="text-xs text-gray-400">Longitud: <span id="resDescLength" class="font-semibold text-gray-700"></span> caracteres (Ideal: 150-160)</p>
+                </div>
+
+                <!-- H1 Card -->
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4" id="cardH1">
+                    <div class="flex justify-between items-start mb-4">
+                        <h4 class="text-lg font-semibold text-gray-700"><i class="fas fa-header mr-2"></i>Encabezado H1</h4>
+                        <span id="badgeH1" class="px-2 py-1 rounded text-xs font-bold uppercase"></span>
+                    </div>
+                    <p id="resH1" class="text-gray-600 text-sm mb-2 break-words"></p>
+                    <p class="text-xs text-gray-400">Cantidad encontrada: <span id="resH1Count" class="font-semibold text-gray-700"></span></p>
+                </div>
+
+                <!-- Word Count Card -->
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4" id="cardWords">
+                    <div class="flex justify-between items-start mb-4">
+                        <h4 class="text-lg font-semibold text-gray-700"><i class="fas fa-file-word mr-2"></i>Contenido</h4>
+                        <span id="badgeWords" class="px-2 py-1 rounded text-xs font-bold uppercase"></span>
+                    </div>
+                    <p class="text-gray-600 text-2xl font-bold mb-1" id="resWords"></p>
+                    <p class="text-xs text-gray-400">Palabras (Ideal: > 300)</p>
+                </div>
+
+                <!-- Images Card -->
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4" id="cardImages">
+                    <div class="flex justify-between items-start mb-4">
+                        <h4 class="text-lg font-semibold text-gray-700"><i class="fas fa-images mr-2"></i>Imágenes sin ALT</h4>
+                        <span id="badgeImages" class="px-2 py-1 rounded text-xs font-bold uppercase"></span>
+                    </div>
+                    <p class="text-gray-600 text-2xl font-bold mb-1" id="resImagesCount"></p>
+                    <div id="resImagesList" class="text-xs text-red-500 truncate mt-2 hidden flex-col gap-1"></div>
+                </div>
+
+                <!-- Indexing & Canonical Card -->
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4" id="cardIndex">
+                    <div class="flex justify-between items-start mb-4">
+                        <h4 class="text-lg font-semibold text-gray-700"><i class="fas fa-robot mr-2"></i>Indexación</h4>
+                        <span id="badgeIndex" class="px-2 py-1 rounded text-xs font-bold uppercase"></span>
+                    </div>
+                    <p id="resIndex" class="text-gray-600 text-sm mb-3 font-semibold"></p>
+                    <h5 class="text-xs font-bold text-gray-500">Canonical:</h5>
+                    <p id="resCanonical" class="text-xs text-gray-600 break-all"></p>
+                </div>
+                
+                <!-- Internal Links Card -->
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500">
+                    <div class="flex justify-between items-start mb-4">
+                        <h4 class="text-lg font-semibold text-gray-700"><i class="fas fa-link mr-2"></i>Enlaces Internos</h4>
+                        <span class="px-2 py-1 rounded text-xs font-bold uppercase bg-blue-100 text-blue-800">INFO</span>
+                    </div>
+                    <p class="text-gray-600 text-2xl font-bold mb-1" id="resInternalLinks"></p>
+                    <p class="text-xs text-gray-400">Enlaces apuntando al mismo dominio</p>
+                </div>
+
+            </div>
+
+            <!-- H2 List Table -->
+            <div class="mt-8 bg-white rounded-xl shadow-md overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
+                    <h4 class="text-lg font-semibold text-gray-800"><i class="fas fa-list-ol mr-2"></i>Estructura de Encabezados H2</h4>
+                    <span class="px-2 py-1 rounded text-xs font-bold uppercase bg-gray-200 text-gray-700" id="resH2CountBadge"></span>
+                </div>
+                <div class="p-6">
+                    <ul id="resH2List" class="list-disc pl-5 space-y-2 text-gray-600 text-sm"></ul>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p>&copy; 2026 Auditor SEO Rápido. Todos los derechos reservados.</p>
+            <p class="mt-2 text-gray-400 text-sm">Realizado por: <a href="https://www.esddesigns.es" target="_blank" class="text-blue-400 hover:text-blue-300">ESD Designs</a></p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('auditForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const urlInput = document.getElementById('urlInput').value;
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            const loader = document.getElementById('loader');
+            const resultsContainer = document.getElementById('resultsContainer');
+            const errorMessage = document.getElementById('errorMessage');
+
+            // Reset UI
+            errorMessage.classList.add('hidden');
+            resultsContainer.classList.add('hidden');
+            btnText.classList.add('hidden');
+            loader.classList.remove('hidden');
+            submitBtn.disabled = true;
+
+            try {
+                // Determine API endpoint based on environment (local vs production)
+                const apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+                    ? 'http://localhost:3000/api/audit' 
+                    : '/api/audit';
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url: urlInput })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Ocurrió un error al analizar la URL');
+                }
+
+                renderResults(data);
+
+            } catch (error) {
+                errorMessage.textContent = error.message;
+                errorMessage.classList.remove('hidden');
+            } finally {
+                btnText.classList.remove('hidden');
+                loader.classList.add('hidden');
+                submitBtn.disabled = false;
+            }
+        });
+
+        function setCardState(cardId, badgeId, isGood, goodText = 'Bien', badText = 'Alerta') {
+            const card = document.getElementById(cardId);
+            const badge = document.getElementById(badgeId);
+            
+            card.classList.remove('border-green-500', 'border-red-500', 'border-yellow-500');
+            badge.classList.remove('bg-green-100', 'text-green-800', 'bg-red-100', 'text-red-800', 'bg-yellow-100', 'text-yellow-800');
+            
+            if (isGood === true) {
+                card.classList.add('border-green-500');
+                badge.classList.add('bg-green-100', 'text-green-800');
+                badge.textContent = goodText;
+            } else if (isGood === false) {
+                card.classList.add('border-red-500');
+                badge.classList.add('bg-red-100', 'text-red-800');
+                badge.textContent = badText;
+            } else { // Warning/yellow state if needed, passed as null/string
+                 card.classList.add('border-yellow-500');
+                 badge.classList.add('bg-yellow-100', 'text-yellow-800');
+                 badge.textContent = goodText; // reuse param
+            }
+        }
+
+        function renderResults(data) {
+            // General
+            document.getElementById('resUrl').textContent = data.url;
+            document.getElementById('resUrl').href = data.url;
+            document.getElementById('resTtfb').textContent = data.ttfb;
+
+            // Title
+            document.getElementById('resTitle').textContent = data.title.content || 'Sin título';
+            document.getElementById('resTitleLength').textContent = data.title.length;
+            let titleOk = data.title.status === 'Óptimo' ? true : false;
+            setCardState('cardTitle', 'badgeTitle', titleOk, data.title.status, data.title.status);
+
+            // Meta Description
+            document.getElementById('resDesc').textContent = data.metaDescription.content || 'Sin descripción';
+            document.getElementById('resDescLength').textContent = data.metaDescription.length;
+            let descOk = data.metaDescription.status === 'Óptimo' ? true : false;
+            setCardState('cardDesc', 'badgeDesc', descOk, data.metaDescription.status, data.metaDescription.status);
+
+            // H1
+            document.getElementById('resH1').textContent = data.h1.content;
+            document.getElementById('resH1Count').textContent = data.h1.count;
+            let h1Ok = data.h1.count === 1;
+            setCardState('cardH1', 'badgeH1', h1Ok, '1 H1 (Correcto)', data.h1.count === 0 ? 'Falta H1' : 'Múltiples H1');
+
+            // Words
+            document.getElementById('resWords').textContent = data.content.wordCount;
+            let wordsOk = !data.content.isShort;
+            setCardState('cardWords', 'badgeWords', wordsOk, 'Aceptable', 'Poco contenido');
+
+            // Images
+            document.getElementById('resImagesCount').textContent = data.images.withoutAltCount;
+            let imagesOk = data.images.withoutAltCount === 0;
+            setCardState('cardImages', 'badgeImages', imagesOk, 'Perfecto', 'Faltan ALT');
+            
+            const imgList = document.getElementById('resImagesList');
+            if (!imagesOk) {
+                imgList.classList.remove('hidden');
+                imgList.classList.add('flex');
+                imgList.innerHTML = '<span>Ejemplos:</span>' + data.images.sampleUrls.map(url => `<a href="${url}" target="_blank" class="hover:underline truncate">${url}</a>`).join('');
+            } else {
+                imgList.classList.add('hidden');
+                imgList.classList.remove('flex');
+            }
+
+            // Indexing & Canonical
+            document.getElementById('resIndex').textContent = data.indexing.status;
+            document.getElementById('resCanonical').textContent = data.canonical;
+            
+            let indexOk = !data.indexing.isNoIndex;
+            let canonicalOk = data.canonical !== 'No encontrado';
+            let combinedIndexOk = indexOk && canonicalOk;
+            
+            if (indexOk && canonicalOk) {
+                setCardState('cardIndex', 'badgeIndex', true, 'Indexable');
+            } else if (!indexOk) {
+                setCardState('cardIndex', 'badgeIndex', false, '', 'Bloqueado (Noindex)');
+            } else {
+                setCardState('cardIndex', 'badgeIndex', 'warning', 'Falta Canonical');
+            }
+
+            // Internal Links
+            document.getElementById('resInternalLinks').textContent = data.links.internalCount;
+
+            // H2 list
+            const h2List = document.getElementById('resH2List');
+            h2List.innerHTML = '';
+            document.getElementById('resH2CountBadge').textContent = `${data.h2.length} encontrados`;
+            
+            if (data.h2.length > 0) {
+                data.h2.forEach(h2 => {
+                    const li = document.createElement('li');
+                    li.textContent = h2;
+                    h2List.appendChild(li);
+                });
+            } else {
+                h2List.innerHTML = '<li class="text-gray-400 italic">No se encontraron etiquetas H2</li>';
+            }
+
+            // Show results
+            document.getElementById('resultsContainer').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
